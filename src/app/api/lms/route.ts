@@ -14,6 +14,6 @@
 //     return Response.json("123");
 // }
 
-export default function Yo() {
+export async function GET() {
     return Response.json({ yo: 24 });
 }
