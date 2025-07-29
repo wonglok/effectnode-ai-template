@@ -13,3 +13,7 @@
 
 //     return Response.json("123");
 // }
+
+export default function Yo() {
+    return Response.json({ yo: 24 });
+}
