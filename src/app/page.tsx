@@ -1,8 +1,8 @@
-import { Demo } from "@/game/Demo";
+import { GameCanvas } from "@/game/GameCanvas";
 export default function Home() {
     return (
         <div className="w-full h-full">
-            <Demo></Demo>
+            <GameCanvas></GameCanvas>
         </div>
     );
 }

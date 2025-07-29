@@ -2,7 +2,7 @@
 import { Game } from "@/game/Game";
 import { Canvas } from "@react-three/fiber";
 
-export function Demo() {
+export function GameCanvas() {
     return (
         <>
             <Canvas>
