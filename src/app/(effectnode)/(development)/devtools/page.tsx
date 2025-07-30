@@ -15,6 +15,7 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -38,18 +39,41 @@ export default function Page() {
                         <BreadcrumbList>
                             <BreadcrumbItem className="hidden md:block">
                                 <BreadcrumbLink href="/devtools">
-                                    Dashboard
+                                    Developer Tools
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
-                            <BreadcrumbSeparator className="hidden md:block" />
+                            {/* <BreadcrumbSeparator className="hidden md:block" />
                             <BreadcrumbItem>
                                 <BreadcrumbPage>Home</BreadcrumbPage>
-                            </BreadcrumbItem>
+                            </BreadcrumbItem> */}
                         </BreadcrumbList>
                     </Breadcrumb>
                 </div>
             </header>
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0"></div>
+            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+                    <div className="bg-muted/50 aspect-video rounded-xl p-3">
+                        <div className="w-full h-full flex items-center justify-center">
+                            <div>Loading...</div>
+                        </div>
+                    </div>
+                    <div className="bg-muted/50 aspect-video rounded-xl p-3">
+                        <div className="w-full h-full flex items-center justify-center">
+                            <div>Loading...</div>
+                        </div>
+                    </div>
+                    <div className="bg-muted/50 aspect-video rounded-xl p-3">
+                        <div className="w-full h-full flex items-center justify-center">
+                            <div>Loading...</div>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min">
+                    <div className="w-full h-full flex items-center justify-center">
+                        <div>Loading...</div>
+                    </div>
+                </div>
+            </div>
         </>
     );
 }

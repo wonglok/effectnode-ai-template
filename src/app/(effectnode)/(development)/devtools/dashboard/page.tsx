@@ -28,8 +28,8 @@ export default function Page() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem className="hidden md:block">
-                                <BreadcrumbLink href="#">
-                                    Building Your Application
+                                <BreadcrumbLink href="/devtools">
+                                    Developer Tools
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator className="hidden md:block" />
@@ -40,34 +40,17 @@ export default function Page() {
                     </Breadcrumb>
                 </div>
             </header>
+
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     <div className="bg-muted/50 aspect-video rounded-xl p-3">
-                        <button
-                            onClick={() => {
-                                //
-                            }}
-                        >
-                            1
-                        </button>
+                        Backend
                     </div>
                     <div className="bg-muted/50 aspect-video rounded-xl p-3">
-                        <button
-                            onClick={() => {
-                                //
-                            }}
-                        >
-                            2
-                        </button>
+                        Frontend
                     </div>
                     <div className="bg-muted/50 aspect-video rounded-xl p-3">
-                        <button
-                            onClick={() => {
-                                //
-                            }}
-                        >
-                            3
-                        </button>
+                        Glass
                     </div>
                 </div>
                 <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
