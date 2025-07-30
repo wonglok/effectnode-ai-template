@@ -34,18 +34,19 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
+
 import {
     DropdownMenu,
     DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import Link from "next/link";
 
 // This is sample data.
 const getData = () => {
     return {
         user: {
-            name: "wonglok831",
-            email: "yellowhappy831@gmail.com",
+            name: "AI Devtools",
+            email: "For Funz",
             avatar: `/effectnode-asset/emoji/star-struck-emoji-icon.svg`,
         },
         teams: [
