@@ -1,6 +1,6 @@
-import { ButtonActionsAI } from "@/ai/ButtonActionsAI";
-import { ButtonCodeAI } from "@/ai/ButtonCodeAI";
-import { ButtonDatabaseAI } from "@/ai/ButtonDatabaseAI";
+// import { ButtonActionsAI } from "@/ai/ButtonActionsAI";
+// import { ButtonCodeAI } from "@/ai/ButtonCodeAI";
+// import { ButtonDatabaseAI } from "@/ai/ButtonDatabaseAI";
 import { GameCanvas } from "@/game/GameCanvas";
 export default function Home() {
     return (
