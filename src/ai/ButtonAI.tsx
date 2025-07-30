@@ -8,27 +8,36 @@ export function ButtonAI() {
         <button
             className="m-3 p-3 bg-gray-200 cursor-pointer hover:bg-gray-300"
             onClick={async () => {
+                //
+
                 // A zod schema for a book
-                const bookSchema = z.array(
+                const bookListSchema = z.array(
                     z.object({
+                        //
                         title: z.string().describe("title of the book"),
+
+                        //
                         author: z.string().describe("author of the book"),
+
+                        //
                         shortSummary: z
                             .string()
                             .describe("short summary of the book"),
+
+                        //
                         year: z
                             .string()
                             .describe("year of the book is written"),
 
-                        isBible: z.discriminatedUnion("type", [
+                        isBible: z.discriminatedUnion("isBible", [
                             z.object({
-                                type: z.literal("bible"),
+                                isBible: z.literal("is-bible"),
                                 reason: z
                                     .string()
                                     .describe("this book is in bible"),
                             }),
                             z.object({
-                                type: z.literal("non-bible"),
+                                isBible: z.literal("not-bible"),
                                 reason: z
                                     .string()
                                     .describe("Not the bible itself"),
@@ -37,7 +46,12 @@ export function ButtonAI() {
                     })
                 );
 
-                const model = await client.llm.model("qwen/qwen3-8b");
+                //
+                //
+
+                const model = await client.llm.model(
+                    "mistralai/devstral-small-2507"
+                );
 
                 let action = async ({
                     query = "tell me about ...",
@@ -45,15 +59,16 @@ export function ButtonAI() {
                 }) => {
                     try {
                         console.log("loading...");
+
                         const result = await model.respond(query, {
                             structured: {
                                 type: "json",
-                                jsonSchema: z.toJSONSchema(bookSchema),
+                                jsonSchema: z.toJSONSchema(bookListSchema),
                             },
-                            maxTokens: 5000, // Recommended to avoid getting stuck
+                            maxTokens: 4096, // Recommended to avoid getting stuck
                         });
 
-                        let list = bookSchema.parse(
+                        let list = bookListSchema.parse(
                             JSON.parse(result.nonReasoningContent)
                         );
 
@@ -75,13 +90,13 @@ export function ButtonAI() {
                     }
                 };
                 let data = await action({
-                    query: `tell me 3 books about Jesus `,
+                    query: `tell me 5 books about Jesus `,
                 });
 
                 console.log(data);
             }}
         >
-            123
+            Run AI
         </button>
     );
 }
