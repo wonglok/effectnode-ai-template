@@ -7,7 +7,7 @@ export default function Home() {
         <div className="w-full h-full relative">
             <GameCanvas></GameCanvas>
 
-            <div className=" absolute bottom-0 left-0">
+            {/* <div className=" absolute bottom-0 left-0">
                 <div>
                     <ButtonDatabaseAI></ButtonDatabaseAI>
                     <ButtonActionsAI></ButtonActionsAI>
@@ -19,7 +19,7 @@ export default function Home() {
                         className="text-xs p-3 max-w-4xl overflow-y-auto bg-white h-96 whitespace-pre-wrap"
                     ></pre>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }
