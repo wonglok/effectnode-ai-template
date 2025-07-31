@@ -1,7 +1,6 @@
 "use client";
 import { LMStudioClient } from "@lmstudio/sdk";
 import { z } from "zod";
-const client = new LMStudioClient();
 
 export function ButtonAI() {
     return (
@@ -9,6 +8,7 @@ export function ButtonAI() {
             className="m-3 p-3 bg-gray-200 cursor-pointer hover:bg-gray-300"
             onClick={async () => {
                 //
+                const client = new LMStudioClient();
 
                 // A zod schema for a book
                 const bookListSchema = z.array(

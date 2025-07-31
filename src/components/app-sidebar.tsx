@@ -5,6 +5,7 @@ import {
     AudioWaveform,
     BookOpen,
     Bot,
+    CodeIcon,
     Command,
     CommandIcon,
     Frame,
@@ -18,9 +19,8 @@ import {
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
+import { AppSwitcher } from "@/components/team-switcher";
 import {
     Sidebar,
     SidebarContent,
@@ -35,175 +35,182 @@ import {
     SidebarRail,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { create } from "zustand";
 
-import {
-    DropdownMenu,
-    DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
-
-// This is sample data.
-const getData = () => {
+export const useDeveloperTools = create<any>(() => {
     return {
+        //
+        currentSlug: "",
+        //
+        projects: [],
+    };
+});
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    let { slug } = useParams();
+    let pathname = usePathname();
+    // let projects = useDeveloperTools((r) => r.projects);
+
+    let data = {
         user: {
-            name: "AI Devtools",
-            email: "For Funz",
+            name: "EffectNode",
+            email: "Thank you Jesus!",
             avatar: `/effectnode-asset/emoji/star-struck-emoji-icon.svg`,
         },
-        teams: [
-            {
-                name: "Acme Inc",
-                logo: GalleryVerticalEnd,
-                plan: "Enterprise",
-            },
-            {
-                name: "Acme Corp.",
-                logo: AudioWaveform,
-                plan: "Startup",
-            },
-            {
-                name: "Yo Corp.",
-                logo: Command,
-                plan: "Free",
-            },
-        ],
 
         dashboard: [
             {
+                name: "Home",
+                url: `/`,
+                icon: CommandIcon,
+            },
+            {
                 name: "Dasboard",
-                url: "/devtools/dashboard",
+                url: `/developer`,
                 icon: CommandIcon,
             },
         ],
         navMain: [
             {
                 title: "Backend",
-                url: "/devtools/backend",
+                url: `/developer`,
                 icon: Server,
-                isActive:
-                    window.location.pathname.startsWith("/devtools/backend"),
+                isActive: [`/developer/generator`].some((s) =>
+                    pathname.startsWith(s)
+                ),
                 items: [
                     {
-                        title: "Feature Spec",
-                        url: "/devtools/backend/spec",
-                    },
-                    {
-                        title: "Database",
-                        url: "/devtools/backend/db",
-                    },
-                    {
-                        title: "REST API",
-                        url: "/devtools/backend/rest-api",
+                        title: "Spec and Code Generator",
+                        url: `/developer/generator`,
                     },
                 ],
             },
-            {
-                title: "Frontend",
-                url: "/devtools/frontend",
-                icon: Bot,
 
-                isActive:
-                    window.location.pathname.startsWith("/devtools/frontend"),
-                items: [
-                    {
-                        title: "3D Editor",
-                        url: "/devtools/frontend/editor",
-                    },
-                    {
-                        title: "Landing Page Editor",
-                        url: "/devtools/frontend/landing-page",
-                    },
-                ],
-            },
-            {
-                title: "Documentation",
-                url: "/devtools",
-                icon: BookOpen,
-                items: [
-                    {
-                        title: "Introduction",
-                        url: "/devtools",
-                    },
-                    {
-                        title: "Get Started",
-                        url: "/devtools",
-                    },
-                    {
-                        title: "Tutorials",
-                        url: "/devtools",
-                    },
-                    {
-                        title: "Changelog",
-                        url: "/devtools",
-                    },
-                ],
-            },
-            {
-                title: "Settings",
-                url: "/devtools",
-                icon: Settings2,
-                items: [
-                    {
-                        title: "General",
-                        url: "/devtools",
-                    },
-                    {
-                        title: "Team",
-                        url: "/devtools",
-                    },
-                    {
-                        title: "Billing",
-                        url: "/devtools",
-                    },
-                    {
-                        title: "Limits",
-                        url: "/devtools",
-                    },
-                ],
-            },
+            // {
+            //     title: "Frontend",
+            //     url: `/developer/frontend",
+            //     icon: CodeIcon,
+
+            //     isActive: window.location.pathname.startsWith(
+            //         `/developer/${slug}/frontend"
+            //     ),
+            //     items: [
+            //         {
+            //             title: "3D Editor",
+            //             url: `/developer/${slug}/frontend/editor",
+            //         },
+            //         {
+            //             title: "Landing Page Editor",
+            //             url: `/developer/${slug}/frontend/landing-page",
+            //         },
+            //     ],
+            // },
+            // {
+            //     title: "Documentation",
+            //     url: `/developer/${slug}`,
+            //     icon: BookOpen,
+            //     items: [
+            //         {
+            //             title: "Introduction",
+            //             url: `/developer/${slug}`,
+            //         },
+            //         {
+            //             title: "Get Started",
+            //             url: `/developer/${slug}`,
+            //         },
+            //         {
+            //             title: "Tutorials",
+            //             url: `/developer/${slug}`,
+            //         },
+            //         {
+            //             title: "Changelog",
+            //             url: `/developer/${slug}`,
+            //         },
+            //     ],
+            // },
+            // {
+            //     title: "Settings",
+            //     url: `/developer/${slug}`,
+            //     icon: Settings2,
+            //     items: [
+            //         {
+            //             title: "General",
+            //             url: `/developer/${slug}`,
+            //         },
+            //         {
+            //             title: "Team",
+            //             url: `/developer/${slug}`,
+            //         },
+            //         {
+            //             title: "Billing",
+            //             url: `/developer/${slug}`,
+            //         },
+            //         {
+            //             title: "Limits",
+            //             url: `/developer/${slug}`,
+            //         },
+            //     ],
+            // },
+            //
+            //
+            //
+            //
         ],
         projects: [
             {
                 name: "Design Engineering",
-                url: "/devtools",
+                url: `/developer/${slug}`,
                 icon: Frame,
             },
             {
                 name: "Sales & Marketing",
-                url: "/devtools",
+                url: `/developer/${slug}`,
                 icon: PieChart,
             },
             {
                 name: "Travel",
-                url: "/devtools",
+                url: `/developer/${slug}`,
                 icon: Map,
             },
         ],
-    };
-};
-
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-    let [data, setData] = React.useState<any>(
-        ((typeof window === "undefined" ? {} : window) as any)?.menuData
-    );
-
-    React.useEffect(() => {
-        (window as any).menuData = getData();
-
-        setData(getData());
         //
-    }, []);
+    };
+
     return (
         <>
             {data ? (
                 <>
                     <Sidebar collapsible="icon" {...props}>
                         <SidebarHeader>
-                            <TeamSwitcher teams={data.teams} />
+                            {
+                                <AppSwitcher
+                                    projects={[
+                                        {
+                                            name: `Developer Tools`,
+                                            slug: `app`,
+                                            logo: Command,
+                                            plan: "AI Vibe Coding",
+                                        },
+                                    ]}
+
+                                    //   projects={projects
+                                    // .filter((r: any) => r)
+                                    // .map((it: any) => {
+                                    //     return {
+                                    //         name: it.name,
+                                    //         slug: it.slug,
+                                    //         logo: Command,
+                                    //         plan: "Vibe Coding",
+                                    //     };
+                                    // })}
+                                />
+                            }
                         </SidebarHeader>
                         <SidebarContent>
                             <SidebarGroup className="group-data-[collapsible=icon]:hidden">
                                 <SidebarGroupLabel>
-                                    Developer Tools
+                                    Welcome back!
                                 </SidebarGroupLabel>
                                 <SidebarMenu>
                                     {data.dashboard.map(
@@ -225,7 +232,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                 </SidebarMenu>
                             </SidebarGroup>
                             <NavMain items={data.navMain} />
-                            <NavProjects projects={data.projects} />
+                            {/* <Navprojects projects={data.projects} /> */}
                         </SidebarContent>
                         <SidebarFooter>
                             <NavUser user={data.user} />

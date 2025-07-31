@@ -18,18 +18,29 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar";
+import { v4 } from "uuid";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { useDeveloperTools } from "./app-sidebar";
 
-export function TeamSwitcher({
-    teams,
+export function AppSwitcher({
+    projects,
 }: {
-    teams: {
+    projects: {
         name: string;
+        slug: string;
         logo: any;
         plan: string;
     }[];
 }) {
+    let router = useRouter();
+    let { slug } = useParams();
+    // console.log("projects", projects);
+
     const { isMobile } = useSidebar();
-    const [activeTeam, setActiveTeam] = React.useState<any>(teams[0]);
+
+    let activeTeam = projects.find((r) => r.slug === slug);
+
+    activeTeam = projects[0];
 
     if (!activeTeam) {
         return null;
@@ -55,22 +66,24 @@ export function TeamSwitcher({
                                     {activeTeam.plan}
                                 </span>
                             </div>
-                            <ChevronsUpDown className="ml-auto" />
+                            {/* <ChevronsUpDown className="ml-auto" /> */}
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent
+                    {/* <DropdownMenuContent
                         className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
                         align="start"
                         side={isMobile ? "bottom" : "right"}
                         sideOffset={4}
                     >
                         <DropdownMenuLabel className="text-muted-foreground text-xs">
-                            Teams
+                            Projects
                         </DropdownMenuLabel>
-                        {teams.map((team, index) => (
+                        {projects.map((team, index) => (
                             <DropdownMenuItem
-                                key={team.name}
-                                onClick={() => setActiveTeam(team)}
+                                key={team.slug + team.name}
+                                onClick={() => {
+                                    router.push(`/developer/${team.slug}`);
+                                }}
                                 className="gap-2 p-2"
                             >
                                 <div className="flex size-6 items-center justify-center rounded-md border">
@@ -83,15 +96,52 @@ export function TeamSwitcher({
                             </DropdownMenuItem>
                         ))}
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="gap-2 p-2">
+                        <DropdownMenuItem
+                            className="gap-2 p-2"
+                            onClick={async () => {
+                                //
+                                let res = await fetch(
+                                    `http://localhost:8390/new-project`,
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify({
+                                            name: "New App",
+                                        }),
+                                    }
+                                );
+                                let data = await res.json();
+
+                                await fetch(`http://localhost:8390/all-data`, {
+                                    method: "GET",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                }).then((r) => {
+                                    if (r.ok) {
+                                        return r.json().then((v) => {
+                                            useDeveloperTools.setState({
+                                                projects: v.projects,
+                                            });
+                                        });
+                                    }
+                                });
+
+                                router.push(`/developer/${data.slug}`);
+
+                                //
+                            }}
+                        >
                             <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                                 <Plus className="size-4" />
                             </div>
                             <div className="text-muted-foreground font-medium">
-                                Add team
+                                Add Project
                             </div>
                         </DropdownMenuItem>
-                    </DropdownMenuContent>
+                    </DropdownMenuContent> */}
                 </DropdownMenu>
             </SidebarMenuItem>
         </SidebarMenu>
