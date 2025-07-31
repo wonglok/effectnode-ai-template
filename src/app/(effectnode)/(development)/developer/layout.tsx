@@ -25,7 +25,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
         return (
             <>
                 <div className="w-full h-full flex items-center justify-center">
-                    Developer Tools is only avaible in development mode.
+                    Developer Tools are only avaible in development mode.
                 </div>
             </>
         );
