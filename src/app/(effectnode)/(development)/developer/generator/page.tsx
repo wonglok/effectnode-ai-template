@@ -66,7 +66,7 @@ export default function Page() {
             {/*  */}
             {/*  */}
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min p-3">
+                <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min p-3 max-w-[800px]">
                     <h1 className="text-2xl mb-3">Generate Features</h1>
 
                     <div className="mb-3">
@@ -156,14 +156,12 @@ export default function Page() {
                                                     <div className="text-2xl">
                                                         {table.tableName}
                                                     </div>
-                                                    <div className="text-xl"></div>
-                                                    <div>
-                                                        <Table className="max-w-[800px]">
-                                                            <TableCaption>
-                                                                {
-                                                                    table.description
-                                                                }
-                                                            </TableCaption>
+                                                    <div className="text-gray-500">
+                                                        {table.description}
+                                                    </div>
+                                                    <div className="mb-6">
+                                                        <Table>
+                                                            {/* <TableCaption></TableCaption> */}
                                                             <TableHeader>
                                                                 <TableRow>
                                                                     <TableHead className="w-[100px] text-right">
@@ -222,19 +220,12 @@ export default function Page() {
                         )}
                     </div>
                 </div>
-                {/* 
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="bg-muted/50 aspect-video rounded-xl p-3">
-                        123
-                    </div>
-                    <div className="bg-muted/50 aspect-video rounded-xl p-3">
-                        123
-                    </div>
-                    <div className="bg-muted/50 aspect-video rounded-xl p-3">
-                        123
-                    </div>
-                </div>
-                <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" /> */}
+
+                {/*  */}
+                {/*  */}
+                {/*  */}
+                {/*  */}
+                {/*  */}
             </div>
         </>
     );
