@@ -9,13 +9,11 @@ export const vibeCache = localforage.createInstance({
 });
 const client = new LMStudioClient();
 
-let defaultPrompt = `
-Create me a database for the easter egg game in a 3d world with threejs.
-User can place eggs in place [x,y,z] and user can discover egg and claim it.
-We can also have analytics of the user actions. 
-We have multiple 3d worlds, poeple can travvel to different places using portals. 
-Create a auth database table for users to sign up and login using simple email and password and mark it as verified or not. 
-`;
+let defaultPrompt = `Create me a database for the easter egg game in a 3d world with three.js. 
+User can place eggs in place [x,y,z] and user can discover egg and claim it. 
+We can also have analytics of the user actions. we have multiple 3d worlds. 
+People can travel to different places using portals. 
+Create a auth database table for users to sign up and login using simple email and password and mark it as verified or not.`;
 
 export const useVibe = create<any>((set, get) => {
     return {
@@ -24,12 +22,19 @@ export const useVibe = create<any>((set, get) => {
 
         //
 
+        modelCode: "mistralai/devstral-small-2507",
         overallDesc: defaultPrompt,
-        databaseSchemaJSON: false,
-        actionJSON: false,
+        databaseSchemaJSON: null,
+        actionJSON: null,
+        mongooseCode: null,
 
         hydrate: async () => {
-            let fields = [`databaseSchemaJSON`, `overallDesc`, `actionJSON`];
+            let fields = [
+                `databaseSchemaJSON`,
+                `overallDesc`,
+                `actionJSON`,
+                `mongooseCode`,
+            ];
 
             for (let field of fields) {
                 let value = await vibeCache.getItem(field);
@@ -40,6 +45,9 @@ export const useVibe = create<any>((set, get) => {
                 }
             }
         },
+
+        //
+
         tempSchemaJSON: "",
         fromSpecToDatabaseSchema: async () => {
             // A zod schema for a book
@@ -116,9 +124,7 @@ export const useVibe = create<any>((set, get) => {
                 })
                 .describe("overall application specification");
             //
-            const model = await client.llm.model(
-                "mistralai/devstral-small-2507"
-            );
+            const model = await client.llm.model(get().modelCode);
             // const model = await client.llm.model("qwen/qwen3-8b");
 
             let generateSchemaDB = async ({
@@ -245,9 +251,7 @@ export const useVibe = create<any>((set, get) => {
                 ),
             });
 
-            const model = await client.llm.model(
-                "mistralai/devstral-small-2507"
-            );
+            const model = await client.llm.model(get().modelCode);
             // const model = await client.llm.model("qwen/qwen3-8b");
 
             let generateJSON = async ({
@@ -346,10 +350,6 @@ please generate all the required backend REST API endpoint functions
         
         `;
 
-            // ${JSON.stringify(v0Data.database.tables, null, "  ")}
-
-            // console.log(query);
-
             console.log("generaing info");
 
             let actionJSON = await generateJSON({
@@ -366,5 +366,96 @@ please generate all the required backend REST API endpoint functions
         },
 
         //
+        tempMongooseCode: "",
+        convertOverallSchemaToMongooseCodePrompt: (table = {}) => {
+            // user original goal:
+            // ${get()?.overallDesc}
+            return `
+${developerSystemPrompt}
+
+here's the mongodb collection info:
+
+${JSON.stringify(table)}
+
+write a mongoose model 
+
+dont use markdown and use js comment to leave explanations
+            `;
+        },
+        convertOverallSchemaToMongooseCode: async () => {
+            const model = await client.llm.model(get().modelCode);
+
+            let tables = get().databaseSchemaJSON.database.tables;
+
+            for (let table of tables) {
+                // const zodSchema = z.object({
+                //     explaination: z
+                //         .string()
+                //         .describe("explaination of the mongoose models"),
+
+                //     fileName: z.string().describe("mongoose model file name"),
+                //     code: z.string().describe("code content"),
+                // });
+
+                const query =
+                    get().convertOverallSchemaToMongooseCodePrompt(table);
+
+                const prediction = model.respond(query, {
+                    // structured: {
+                    //     type: "json",
+                    //     jsonSchema: z.toJSONSchema(zodSchema),
+                    // },
+                    maxTokens: 25000, // Recommended to avoid getting stuck
+                });
+
+                let chunk = "";
+                for await (let item of prediction) {
+                    chunk += item.content;
+                    set({ tempMongooseCode: chunk });
+                }
+
+                let result = await prediction;
+
+                let resultContent = result.content;
+
+                console.log(resultContent);
+            }
+
+            // typedObject = zodSchema.parse(typedObject);
+
+            // typedObject.files.forEach((file: any) => {
+            //     file.code = file.code.replace(/\\n/g, "\n");
+            //     file.code = file.code.replace("[0m", "");
+            // });
+
+            // await vibeCache.setItem("mongooseCode", typedObject);
+
+            // set({ mongooseCode: typedObject });
+        },
+        //
     };
 });
+
+// let lmstudio = await createOpenAICompatible({
+//     name: "lmstudio",
+//     baseURL: `http://localhost:1234/v1`,
+// });
+// let model = await lmstudio(get().modelCode);
+//
+//                 {
+//                     let output = await ai.streamText({
+//                         model: model,
+//                         prompt: `
+// ${developerSystemPrompt}
+// here's the overall schema:
+// ${overallDesc}
+// we use mongoose database please write code for the overall schema including mongoose model and schema.
+//                     `,
+//                     });
+//                     let chunk = "";
+//                     for await (let stuff of output.textStream) {
+//                         chunk += stuff;
+//                         console.log(chunk);
+//                     }
+//                     console.log(await output.text);
+//                 }

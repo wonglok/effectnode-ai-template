@@ -25,72 +25,45 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { developerSystemPrompt } from "@/ai/prompt/developerSystemPrompt";
+// import { developerSystemPrompt } from "@/ai/prompt/developerSystemPrompt";
 import { AutoBottom } from "./AutoBottom";
+import { developerSystemPrompt } from "@/ai/prompt/developerSystemPrompt";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-export function ActionJSON() {
+const CodeHighlight = ({ codeString }: { codeString: string }) => {
+    return (
+        <SyntaxHighlighter language="typescript" style={dark}>
+            {codeString.replace(/\\n/g, "\n")}
+        </SyntaxHighlighter>
+    );
+};
+
+export function MongooseJSON() {
     let overallDesc = useVibe((r) => r.overallDesc);
     let databaseSchemaJSON = useVibe((r) => r.databaseSchemaJSON);
+    let mongooseCode = useVibe((r) => r.mongooseCode);
     let hydrate = useVibe((r) => r.hydrate);
-    let tempActionJSON = useVibe((r) => r.tempActionJSON);
+    let tempMongooseCode = useVibe((r) => r.tempMongooseCode);
+    let convertOverallSchemaToMongooseCodePrompt = useVibe(
+        (r) => r.convertOverallSchemaToMongooseCodePrompt
+    );
     useEffect(() => {
         hydrate();
     }, []);
 
     let actionJSON = useVibe((r) => r.actionJSON);
 
+    //
+
     let query = "";
-    if (databaseSchemaJSON && databaseSchemaJSON.database) {
-        query = `user want to do the following: 
-                            
-        ${overallDesc}
-        
-        -----
-        
-        here's the database schema:
-        
-        ${databaseSchemaJSON.database.databaseTitle}
-        ${databaseSchemaJSON.database.description}
-        
-        Database Tables:
-        ${databaseSchemaJSON.database.tables
-            .map((table: any) => {
-                return `
-        ----- <${table.tableName} Table> ------
-        name: ${table.tableName}
-        description: ${table.description}
-        columns: 
-        
-        ${table.dataAttributes
-            .map((attr: any) => {
-                return `
-            
-            name: ${attr.name}
-            data type: ${attr.dataType}
-            description: ${attr.description}
-            
-            `;
-            })
-            .join("\n")}
-        
-        ----- <${table.tableName} Table> ------
-        
-        `;
-            })
-            .join("\n")}
-        
-        ----- 
-        
-        please generate all the required backend REST API endpoint functions and organise it as JSON
-        
-        `;
-    }
+    query = convertOverallSchemaToMongooseCodePrompt().trim();
 
     return (
         <>
             <div className="mb-3 p-3 bg-white rounded-xl">
                 <div className="mb-3 text-2xl">
-                    Prompt for Generating REST API Spec JSON
+                    Prompt for Generating Model Code
                 </div>
 
                 <pre className="p-3 bg-white w-full whitespace-pre-wrap h-64 rounded-xl overflow-y-auto border text-xs">
@@ -105,52 +78,53 @@ export function ActionJSON() {
                     onClick={() => {
                         //
 
-                        console.log("Generate Action JSON");
-                        useVibe.getState().fromDataSchemaToActions();
+                        console.log("Generate Mongoose JSON");
+                        useVibe.getState().convertOverallSchemaToMongooseCode();
 
                         //
                     }}
                 >
-                    Generate Action JSON
+                    Generate Mongoose JSON
                 </Button>
             </div>
 
-            {tempActionJSON && (
+            {tempMongooseCode && (
                 <div className="mb-3 p-3 bg-white rounded-xl">
                     <div className="mb-3 text-2xl">Temporary Prompt Output</div>
 
-                    <AutoBottom text={tempActionJSON}></AutoBottom>
+                    <AutoBottom text={tempMongooseCode}></AutoBottom>
                 </div>
             )}
 
-            {actionJSON && actionJSON?.endpoints && (
+            {mongooseCode && mongooseCode?.files && (
                 <div className="mb-3 p-3 bg-white rounded-xl">
-                    <div className="mb-2 text-3xl">
-                        {actionJSON.endpoints?.title}
-                    </div>
+                    <div className="mb-2 text-3xl">Mongoose Codes</div>
                     <div className="mb-3 text-gray-600">
-                        {actionJSON.endpoints.description}
+                        {mongooseCode.explaination}
                     </div>
 
                     <div className="mb-3">
-                        {actionJSON.endpoints.map((endpoint: any) => {
+                        {mongooseCode.files.map((eFile: any) => {
+                            // console.log(eFile);
                             return (
-                                <div key={endpoint.route + endpoint.method}>
+                                <div key={eFile.fileName}>
                                     <div className="text-2xl">
-                                        {endpoint.title}
-                                    </div>
-                                    <div className="text-gray-500">
-                                        {endpoint.method}{" "}
-                                        <span className="mr-1"></span>
-                                        {endpoint.route}
+                                        {eFile.fileName}
                                     </div>
                                     {/* <div className="text-gray-500">
-                                        {endpoint.description}
+                                        {eFile.description}
                                     </div> */}
 
                                     <div className="mb-6">
-                                        <Table>
-                                            {/* <TableCaption></TableCaption> */}
+                                        <div className=" whitespace-pre-wrap text-sm">
+                                            <CodeHighlight
+                                                codeString={`${eFile.code}`}
+                                            ></CodeHighlight>
+                                            {/* {eFile.mongooseModelCodeContent} */}
+                                        </div>
+                                        {/* <TableCaption></TableCaption> */}
+
+                                        {/* <Table>
                                             <TableHeader>
                                                 <TableRow>
                                                     <TableHead className="w-[100px] text-right">
@@ -165,14 +139,14 @@ export function ActionJSON() {
                                                 </TableRow>
                                             </TableHeader>
                                             <TableBody>
-                                                {endpoint.parameters.map(
+                                                {files.parameters.map(
                                                     (params: any) => {
                                                         return (
                                                             <TableRow
                                                                 key={
                                                                     params.name +
                                                                     params.dataType +
-                                                                    endpoint.method
+                                                                    files.method
                                                                 }
                                                             >
                                                                 <TableCell className="text-right">
@@ -195,7 +169,7 @@ export function ActionJSON() {
                                                     }
                                                 )}
                                             </TableBody>
-                                        </Table>
+                                        </Table> */}
                                     </div>
                                 </div>
                             );

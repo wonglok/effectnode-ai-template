@@ -28,6 +28,7 @@ import {
 import { developerSystemPrompt } from "@/ai/prompt/developerSystemPrompt";
 import { ActionJSON } from "./ActionJSON";
 import { DataJSON } from "./DataJSON";
+import { MongooseJSON } from "./MongooseJSON";
 
 export default function Page() {
     let overallDesc = useVibe((r) => r.overallDesc);
@@ -71,13 +72,26 @@ export default function Page() {
             {/*  */}
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                 <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min p-3 max-w-[800px]">
-                    <div className="bg-blue-200 p-3 rounded-xl mb-3">
-                        <DataJSON></DataJSON>
-                    </div>
-
-                    <div className="bg-blue-200 p-3 rounded-xl mb-3">
-                        {/*  */}
-                        <ActionJSON></ActionJSON>
+                    <div className="w-full h-full flex">
+                        <div className=" shrink-0 max-w-[800px] mr-4">
+                            <div className="bg-blue-200 p-3 rounded-xl mb-3">
+                                <DataJSON></DataJSON>
+                            </div>
+                        </div>
+                        {/* <div className=" shrink-0 max-w-[800px] mr-4">
+                            {databaseSchemaJSON && (
+                                <div className="bg-purple-200 p-3 rounded-xl mb-3">
+                                    <ActionJSON></ActionJSON>
+                                </div>
+                            )}
+                        </div> */}
+                        <div className=" shrink-0 max-w-[800px] mr-4">
+                            {
+                                <div className="bg-green-200 p-3 rounded-xl mb-3">
+                                    <MongooseJSON></MongooseJSON>
+                                </div>
+                            }
+                        </div>
                         {/*  */}
                     </div>
                 </div>

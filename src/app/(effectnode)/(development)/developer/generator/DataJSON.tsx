@@ -107,6 +107,7 @@ export function DataJSON() {
 
             {/* tempSchemaJSON */}
 
+            {/* 
             <div className="mb-3 p-3 bg-white rounded-xl">
                 <div className="mb-3 text-2xl">Database Schema JSON</div>
 
@@ -120,7 +121,7 @@ export function DataJSON() {
                     }}
                     value={JSON.stringify(databaseSchemaJSON, null, "\t")}
                 ></Textarea>
-            </div>
+            </div> */}
 
             {databaseSchemaJSON && databaseSchemaJSON?.database && (
                 <div className="mb-3 p-3 bg-white rounded-xl">
